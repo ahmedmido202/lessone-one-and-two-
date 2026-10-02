@@ -2291,3 +2291,488 @@ button:focus-visible,
             0.01ms !important;
     }
 }
+/* ========================================
+   Student Welcome / Registration
+======================================== */
+
+.student-welcome {
+    width: min(1150px, 92%);
+    min-height: calc(100vh - 180px);
+
+    margin: 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 45px 0;
+}
+
+
+.student-welcome-card {
+    position: relative;
+
+    width: min(520px, 100%);
+
+    overflow: hidden;
+
+    padding: 45px 38px;
+
+    border:
+        1px solid
+        var(--glass-border);
+
+    border-radius: 30px;
+
+    background:
+        var(--glass);
+
+    box-shadow:
+        var(--shadow-strong);
+
+    text-align: center;
+
+    backdrop-filter:
+        blur(22px);
+
+    -webkit-backdrop-filter:
+        blur(22px);
+
+    animation:
+        studentWelcomeEnter
+        0.65s
+        cubic-bezier(.2, .8, .2, 1)
+        both;
+}
+
+
+/* Glow خلف الكارت */
+
+.student-welcome-card::before {
+    content: "";
+
+    position: absolute;
+
+    width: 230px;
+    height: 230px;
+
+    top: -130px;
+    right: -100px;
+
+    border-radius: 50%;
+
+    background:
+        var(--primary);
+
+    opacity: 0.12;
+
+    filter:
+        blur(50px);
+
+    pointer-events: none;
+}
+
+
+.student-welcome-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 220px;
+    height: 220px;
+
+    bottom: -140px;
+    left: -110px;
+
+    border-radius: 50%;
+
+    background:
+        var(--secondary);
+
+    opacity: 0.10;
+
+    filter:
+        blur(50px);
+
+    pointer-events: none;
+}
+
+
+@keyframes studentWelcomeEnter {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(30px)
+            scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+/* ========================================
+   Welcome Icon
+======================================== */
+
+.student-welcome-icon {
+    position: relative;
+
+    z-index: 1;
+
+    width: 76px;
+    height: 76px;
+
+    margin:
+        0 auto 20px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 24px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #7c3aed
+        );
+
+    box-shadow:
+        0 15px 35px
+        rgba(37, 99, 235, 0.25);
+
+    font-size: 36px;
+
+    animation:
+        studentWave
+        2.5s
+        ease-in-out
+        infinite;
+}
+
+
+@keyframes studentWave {
+
+    0%,
+    100% {
+        transform:
+            rotate(0deg)
+            translateY(0);
+    }
+
+    20% {
+        transform:
+            rotate(7deg)
+            translateY(-3px);
+    }
+
+    40% {
+        transform:
+            rotate(-5deg)
+            translateY(-3px);
+    }
+
+    60% {
+        transform:
+            rotate(4deg)
+            translateY(0);
+    }
+}
+
+
+/* ========================================
+   Welcome Text
+======================================== */
+
+.student-welcome-card
+.hero-badge {
+    position: relative;
+
+    z-index: 1;
+
+    margin-bottom: 16px;
+}
+
+
+.student-welcome-card h2 {
+    position: relative;
+
+    z-index: 1;
+
+    margin-bottom: 12px;
+
+    font-size:
+        clamp(
+            28px,
+            5vw,
+            38px
+        );
+
+    line-height: 1.4;
+}
+
+
+.student-welcome-card > p {
+    position: relative;
+
+    z-index: 1;
+
+    margin-bottom: 27px;
+
+    color:
+        var(--muted);
+
+    font-size: 16px;
+
+    line-height: 1.9;
+}
+
+
+/* ========================================
+   Student Name Form
+======================================== */
+
+.student-name-form {
+    position: relative;
+
+    z-index: 1;
+
+    width: 100%;
+}
+
+
+.student-name-input {
+    width: 100%;
+
+    min-height: 58px;
+
+    padding:
+        15px 18px;
+
+    border:
+        2px solid
+        var(--border);
+
+    border-radius: 16px;
+
+    outline: none;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.60
+        );
+
+    color:
+        var(--text);
+
+    font-family:
+        inherit;
+
+    font-size: 16px;
+
+    text-align: right;
+
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.3s ease,
+        transform 0.2s ease;
+}
+
+
+html[data-theme="dark"]
+.student-name-input {
+    background:
+        rgba(
+            15,
+            23,
+            42,
+            0.55
+        );
+}
+
+
+.student-name-input::placeholder {
+    color:
+        var(--muted);
+
+    opacity: 0.75;
+}
+
+
+.student-name-input:hover {
+    border-color:
+        rgba(
+            96,
+            165,
+            250,
+            0.55
+        );
+}
+
+
+.student-name-input:focus {
+    border-color:
+        var(--primary);
+
+    box-shadow:
+        0 0 0 5px
+        rgba(
+            37,
+            99,
+            235,
+            0.10
+        );
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* ========================================
+   Registration Button
+======================================== */
+
+.student-name-form
+.primary-button {
+    width: 100%;
+
+    min-height: 56px;
+
+    margin-top: 12px;
+}
+
+
+.student-name-form
+.primary-button:disabled {
+    opacity: 0.70;
+
+    cursor: wait;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+
+/* ========================================
+   Registration Error
+======================================== */
+
+.student-name-error {
+    min-height: 22px;
+
+    margin-top: 8px;
+
+    color:
+        var(--danger);
+
+    font-size: 13px;
+
+    font-weight: bold;
+
+    text-align: right;
+}
+
+
+/* ========================================
+   Privacy Note
+======================================== */
+
+.student-privacy {
+    position: relative;
+
+    z-index: 1;
+
+    display: block;
+
+    margin-top: 18px;
+
+    color:
+        var(--muted);
+
+    font-size: 11px;
+
+    line-height: 1.7;
+}
+
+
+/* ========================================
+   Student Welcome Mobile
+======================================== */
+
+@media (max-width: 600px) {
+
+    .student-welcome {
+        width: 90%;
+
+        min-height:
+            calc(100vh - 150px);
+
+        padding:
+            28px 0;
+    }
+
+
+    .student-welcome-card {
+        padding:
+            34px 22px;
+
+        border-radius:
+            24px;
+    }
+
+
+    .student-welcome-icon {
+        width: 66px;
+        height: 66px;
+
+        border-radius:
+            20px;
+
+        font-size:
+            31px;
+    }
+
+
+    .student-welcome-card h2 {
+        font-size:
+            28px;
+    }
+
+
+    .student-welcome-card > p {
+        font-size:
+            14px;
+    }
+
+
+    .student-name-input {
+        min-height:
+            55px;
+
+        font-size:
+            16px;
+    }
+
+
+    .student-name-form
+    .primary-button {
+        min-height:
+            54px;
+    }
+}
