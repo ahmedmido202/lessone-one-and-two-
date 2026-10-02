@@ -8,6 +8,40 @@ const homeButton = document.getElementById("homeButton");
 
 
 /* ========================================
+   Supabase
+======================================== */
+
+const SUPABASE_URL =
+    "https://zzcszoapcijodnleocql.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_spsorj1_wo9bI1okDLaciA_LyiFarZo";
+
+let supabaseClient = null;
+
+if (
+    typeof supabase !== "undefined"
+) {
+
+    supabaseClient =
+        supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+}
+
+
+/* ========================================
+   Student
+======================================== */
+
+let studentName =
+    localStorage.getItem(
+        "student-name"
+    ) || "";
+
+
+/* ========================================
    Application State
 ======================================== */
 
@@ -34,8 +68,6 @@ function getSavedTheme() {
         return savedTheme;
     }
 
-    /* لو مفيش اختيار محفوظ
-       نستخدم إعداد الجهاز */
     if (
         window.matchMedia &&
         window.matchMedia(
@@ -200,15 +232,241 @@ function renderPage(content) {
 
     app.innerHTML = content;
 
-    /*
-       إجبار المتصفح على بدء
-       Animation جديدة
-    */
     void app.offsetWidth;
 
     app.classList.add(
         "page-enter"
     );
+}
+
+
+/* ========================================
+   Student Name Screen
+======================================== */
+
+function showStudentNameScreen() {
+
+    const content = `
+        <section class="student-welcome">
+
+            <div class="student-welcome-card">
+
+                <div class="student-welcome-icon">
+                    👋
+                </div>
+
+                <span class="hero-badge">
+                    AI Quiz
+                </span>
+
+                <h2>
+                    أهلاً يا بطل 🔥
+                </h2>
+
+                <p>
+                    أتشرف بيك ❤️
+                    <br>
+                    اسمك إيه علشان نبدأ؟
+                </p>
+
+                <form
+                    id="studentNameForm"
+                    class="student-name-form"
+                >
+
+                    <input
+                        id="studentNameInput"
+                        class="student-name-input"
+                        type="text"
+                        placeholder="اكتب اسمك هنا..."
+                        autocomplete="name"
+                        maxlength="60"
+                        required
+                    >
+
+                    <p
+                        id="studentNameError"
+                        class="student-name-error"
+                        aria-live="polite"
+                    ></p>
+
+                    <button
+                        id="studentNameButton"
+                        class="primary-button"
+                        type="submit"
+                    >
+                        يلا نبدأ 🚀
+                    </button>
+
+                </form>
+
+                <small class="student-privacy">
+                    هنستخدم اسمك فقط لتسجيل دخولك للمراجعة.
+                </small>
+
+            </div>
+
+        </section>
+    `;
+
+    renderPage(content);
+
+    const form =
+        document.getElementById(
+            "studentNameForm"
+        );
+
+    const input =
+        document.getElementById(
+            "studentNameInput"
+        );
+
+    if (input) {
+
+        setTimeout(
+            function () {
+                input.focus();
+            },
+            150
+        );
+    }
+
+    if (form) {
+
+        form.addEventListener(
+            "submit",
+            handleStudentName
+        );
+    }
+}
+
+
+/* ========================================
+   Save Student Name
+======================================== */
+
+async function handleStudentName(event) {
+
+    event.preventDefault();
+
+    const input =
+        document.getElementById(
+            "studentNameInput"
+        );
+
+    const button =
+        document.getElementById(
+            "studentNameButton"
+        );
+
+    const errorArea =
+        document.getElementById(
+            "studentNameError"
+        );
+
+    if (!input) {
+        return;
+    }
+
+    const name =
+        input.value.trim();
+
+    if (
+        name.length < 2
+    ) {
+
+        if (errorArea) {
+
+            errorArea.textContent =
+                "اكتب اسمك الأول يا بطل 👀";
+        }
+
+        input.focus();
+
+        return;
+    }
+
+    if (
+        name.length > 60
+    ) {
+
+        if (errorArea) {
+
+            errorArea.textContent =
+                "الاسم طويل جدًا.";
+        }
+
+        return;
+    }
+
+    if (errorArea) {
+
+        errorArea.textContent = "";
+    }
+
+    if (button) {
+
+        button.disabled = true;
+
+        button.textContent =
+            "ثواني يا بطل... ⏳";
+    }
+
+    try {
+
+        if (!supabaseClient) {
+
+            throw new Error(
+                "Supabase is not available"
+            );
+        }
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .from("students")
+                .insert([
+                    {
+                        name: name
+                    }
+                ]);
+
+        if (error) {
+
+            throw error;
+        }
+
+        studentName = name;
+
+        localStorage.setItem(
+            "student-name",
+            studentName
+        );
+
+        showHome();
+
+    } catch (error) {
+
+        console.error(
+            "Student registration error:",
+            error
+        );
+
+        if (errorArea) {
+
+            errorArea.textContent =
+                "حصلت مشكلة بسيطة في تسجيل الاسم. جرّب تاني.";
+        }
+
+        if (button) {
+
+            button.disabled = false;
+
+            button.textContent =
+                "حاول تاني 🔄";
+        }
+    }
 }
 
 
@@ -220,6 +478,11 @@ function showHome() {
 
     currentLesson = null;
 
+    const welcomeText =
+        studentName
+            ? `أهلاً يا ${escapeHTML(studentName)} 👋`
+            : "أهلاً بيك 👋";
+
     const content = `
         <section class="hero">
 
@@ -230,7 +493,7 @@ function showHome() {
                 </span>
 
                 <h2>
-                    أهلاً بيك 👋
+                    ${welcomeText}
                     <br>
 
                     أنا
@@ -874,11 +1137,6 @@ function showModelAnswer() {
 
     answered = true;
 
-    /*
-       احتساب السؤال المقالي
-       كإجابة صحيحة
-    */
-
     score++;
 
     const question =
@@ -976,6 +1234,9 @@ function showResult() {
             "⭐";
     }
 
+    const safeStudentName =
+        escapeHTML(studentName);
+
     const content = `
         <section
             class="
@@ -989,6 +1250,8 @@ function showResult() {
             </div>
 
             <h2>
+                عاش ${safeStudentName || "يا بطل"}! 🔥
+                <br>
                 خلصنا
                 ${currentLesson.title}!
             </h2>
@@ -1034,11 +1297,6 @@ function showResult() {
     `;
 
     renderPage(content);
-
-    /*
-       الاحتفال يظهر فقط
-       لو النتيجة 80% أو أعلى
-    */
 
     if (
         percentage >= 80
@@ -1145,17 +1403,31 @@ function launchCelebration() {
 
 
 /* ========================================
+   Escape HTML
+   حماية الاسم قبل عرضه داخل الصفحة
+======================================== */
+
+function escapeHTML(value) {
+
+    const element =
+        document.createElement(
+            "div"
+        );
+
+    element.textContent =
+        value || "";
+
+    return element.innerHTML;
+}
+
+
+/* ========================================
    Keyboard Support
 ======================================== */
 
 document.addEventListener(
     "keydown",
     function (event) {
-
-        /*
-           لو المستخدم ضغط Enter
-           بعد الإجابة ينتقل للسؤال التالي
-        */
 
         if (
             event.key === "Enter" &&
@@ -1202,4 +1474,19 @@ applyTheme(
 
 createThemeButton();
 
-showHome();
+/*
+   أول مرة على الجهاز:
+   نسأل الطالب عن اسمه.
+
+   لو الاسم محفوظ بالفعل:
+   يدخل الموقع مباشرة.
+*/
+
+if (studentName) {
+
+    showHome();
+
+} else {
+
+    showStudentNameScreen();
+}
