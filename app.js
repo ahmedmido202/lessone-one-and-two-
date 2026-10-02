@@ -295,7 +295,7 @@ function showHome() {
             <div class="instructor-card">
 
                 <img
-                    src="assets/ahmed.jpg"
+                    src="ahmed.jpg"
                     alt="أحمد خالد"
                 >
 
